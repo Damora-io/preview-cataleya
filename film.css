@@ -1,0 +1,189 @@
+/* Damora Scroll Film starter styles (scripts/scrollfilm/template). The film, the sticky hero, film chapters, holds and
+   plates, a card strip, secondary page heroes, light and dark mode, sideways phones, reduced motion.
+   Tokens first: set the client's brand here (Ends United: black and grey, one amber).
+
+   TWO KINDS OF TOKENS. The film is dark in both modes, so anything that sits ON THE FILM (hero words, chapter words, the
+   end, a secondary page's still hero, the header over the hero) uses the fixed film tokens: --bone, --accent,
+   --accent-hi, --accent-ink. Anything on a plate or a normal section uses the theme tokens: --fg, --fg-2, --muted,
+   --accent-text, --bg, --bg-2, --line, --plate. Mixing them is how Ends United's light mode put dark brown words on the
+   dark film (2.7:1). */
+:root {
+  --film: #08090b; --bone: #ece8e1; --accent: #f2ab4c; --accent-hi: #ffc777; --accent-ink: #1b1206;
+  --bg: #0b0c0e; --bg-2: #141619; --fg: var(--bone); --fg-2: #c4c0b8; --muted: #8f9296;
+  --line: rgba(236, 232, 225, .13); --line-2: rgba(236, 232, 225, .28); --accent-text: var(--accent);
+  --plate: rgba(13, 14, 17, .9); --plate-glass: rgba(13, 14, 17, .74); --plate-line: rgba(236, 232, 225, .1);
+  --serif: Georgia, "Times New Roman", serif; --sans: system-ui, -apple-system, "Segoe UI", sans-serif;
+  --gut: clamp(16px, 4.5vw, 64px); --max: 1320px; --ease: cubic-bezier(.2, .7, .2, 1);
+  color-scheme: dark;
+}
+@media (prefers-color-scheme: light) { :root:not([data-theme="dark"]) {
+  --bg: #e6e4e0; --bg-2: #dcdad5; --fg: #121315; --fg-2: #2b2d31; --muted: #4f5257; --line: rgba(18, 19, 21, .14); --line-2: rgba(18, 19, 21, .3);
+  --accent-text: #7f4a08; --plate: rgba(234, 232, 228, .95); --plate-glass: rgba(234, 232, 228, .93); --plate-line: rgba(18, 19, 21, .1); color-scheme: light; } }
+:root[data-theme="light"] {
+  --bg: #e6e4e0; --bg-2: #dcdad5; --fg: #121315; --fg-2: #2b2d31; --muted: #4f5257; --line: rgba(18, 19, 21, .14); --line-2: rgba(18, 19, 21, .3);
+  --accent-text: #7f4a08; --plate: rgba(234, 232, 228, .95); --plate-glass: rgba(234, 232, 228, .93); --plate-line: rgba(18, 19, 21, .1); color-scheme: light; }
+
+*, *::before, *::after { box-sizing: border-box; }
+html, body { overflow-x: clip; }                     /* clip, not hidden: sticky keeps working, phones never slide sideways */
+html { scroll-padding-top: 84px; }
+body { margin: 0; color: var(--fg); background: var(--bg); font: 400 17px/1.6 var(--sans); }
+body.filmed { background: var(--film); }
+img, canvas { display: block; max-width: 100%; }
+:where(img[width][height]) { height: auto; }         /* R-2026-11-14-4, zero specificity so a component's own height wins */
+.wrap { width: 100%; max-width: var(--max); margin: 0 auto; padding: 0 var(--gut); }
+.eyebrow { display: block; margin-bottom: 14px; font: 600 13px/1.2 var(--sans); letter-spacing: .24em; text-transform: uppercase; color: var(--accent-text); }
+.h2 { font: 400 clamp(38px, 5.6vw, 84px)/.98 var(--serif); margin: 0; text-wrap: balance; }
+.h2 em { color: var(--accent-text); }
+.lede { font-size: clamp(17px, 1.4vw, 20px); color: var(--fg-2); max-width: 56ch; margin: 20px 0 0; }
+.ctas { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 28px; }
+.btn { display: inline-flex; align-items: center; min-height: 50px; padding: 0 24px; border-radius: 999px; text-decoration: none; font-weight: 700; }
+.btn-accent { background: var(--accent); color: var(--accent-ink); }
+.pad { padding: clamp(64px, 9vw, 128px) 0; }
+main > section { position: relative; overflow-x: clip; }
+a:focus-visible, button:focus-visible, [tabindex]:focus-visible { outline: 2px solid var(--accent-text); outline-offset: 3px; }
+
+/* header: clear over the hero, solid once the hero lets go (site.js, film pages only). Secondary pages ship
+   <header class="top solid"> and site.js leaves it alone. */
+.top { position: fixed; inset: 0 0 auto 0; z-index: 50; color: var(--bone); transition: background-color .35s var(--ease); }
+.top.solid { background: rgba(11, 12, 14, .82); -webkit-backdrop-filter: blur(14px); backdrop-filter: blur(14px); }
+/* light mode: the solid header changes with the theme (theme-check.mjs; SVT 2026-11-20, Cataleya 2026-11-26 shipped dark-in-both until fixed) */
+:root[data-theme="light"] .top.solid { background: rgba(236, 234, 230, .92); color: var(--fg); }
+:root[data-theme="light"] .top.solid .theme { border-color: var(--line-2); }
+@media (prefers-color-scheme: light) { :root:not([data-theme="dark"]) .top.solid { background: rgba(236, 234, 230, .92); color: var(--fg); }
+  :root:not([data-theme="dark"]) .top.solid .theme { border-color: var(--line-2); } }
+.top .wrap { display: flex; align-items: center; gap: 22px; height: 72px; max-width: none; }
+.brand { margin-right: auto; font-weight: 800; letter-spacing: .1em; text-transform: uppercase; text-decoration: none; color: inherit; }
+.nav { display: flex; gap: 22px; } .nav a { color: inherit; text-decoration: none; opacity: .85; }
+.theme { width: 42px; height: 42px; border-radius: 50%; border: 1px solid rgba(236, 232, 225, .3); background: transparent; color: inherit; cursor: pointer; }
+@media (max-width: 900px) { .nav { display: none; } }
+
+/* THE FILM: fixed behind everything, 100lvh so the iOS toolbar collapse never shows a gap. The shade is the readability
+   layer: phones darken the top 16% and the bottom 56%, desks the left 62% and the bottom 36%. Words therefore sit
+   bottom-left; never put them top-right where there is no shade. */
+.film { position: fixed; left: 0; top: 0; width: 100%; height: 100vh; height: 100lvh; z-index: 0; background: var(--film); overflow: hidden; }
+.film picture, .film .poster, .film canvas { position: absolute; inset: 0; width: 100%; height: 100%; }
+.film .poster { object-fit: cover; }
+.film canvas { opacity: 0; transition: opacity .4s linear; } .film canvas.on { opacity: 1; }
+.film .shade { position: absolute; inset: 0; pointer-events: none;
+  background: linear-gradient(180deg, rgba(8, 9, 11, .55) 0%, rgba(8, 9, 11, 0) 16%), linear-gradient(0deg, rgba(8, 9, 11, .86) 0%, rgba(8, 9, 11, .42) 32%, rgba(8, 9, 11, 0) 56%); }
+@media (min-width: 761px) { .film .shade { background: linear-gradient(90deg, rgba(8, 9, 11, .8) 0%, rgba(8, 9, 11, .38) 38%, rgba(8, 9, 11, 0) 62%), linear-gradient(0deg, rgba(8, 9, 11, .72) 0%, rgba(8, 9, 11, 0) 36%), linear-gradient(180deg, rgba(8, 9, 11, .5) 0%, rgba(8, 9, 11, 0) 20%); } }
+body.filmed main, body.filmed .foot { position: relative; z-index: 1; }
+
+/* ON THE FILM: fixed film tokens in both modes (see the top of this file) */
+:is(.hero, .film-chap, .end, .page-hero) .eyebrow { color: var(--accent); text-shadow: 0 0 2px rgba(8, 9, 11, .95), 0 0 10px rgba(8, 9, 11, .85); }
+:is(.hero, .film-chap, .end, .page-hero) :is(h1, h2, h3) em { color: var(--accent-hi); }
+:is(.top, .hero, .film-chap, .end, .page-hero) :is(a, button):focus-visible { outline-color: var(--accent); }
+
+/* HERO: 3 screens tall, sticky stage = 2 screens of film (the reference's pace) */
+.hero { height: 300vh; height: 300svh; color: var(--bone); }
+.hero .stage { position: sticky; top: 0; height: 100vh; height: 100svh; min-height: 520px; overflow: hidden; }
+.hero .copy { position: absolute; left: 0; right: 0; bottom: clamp(36px, 9vh, 96px); padding: 0 var(--gut); max-width: 860px;
+  transition: transform .45s var(--ease), opacity .45s var(--ease), visibility 0s linear .45s; text-shadow: 0 1px 26px rgba(0, 0, 0, .5); }
+.hero h1, .hero h2 { font: 400 clamp(46px, 6.6vw, 104px)/.94 var(--serif); margin: 0; text-wrap: balance; }
+.hero p { color: rgba(236, 232, 225, .86); max-width: 50ch; margin: 18px 0 0; }
+.hero .copy-a.out { opacity: 0; transform: translateY(-28px); visibility: hidden; }
+.hero .copy-b { opacity: 0; transform: translateY(34px); visibility: hidden; }
+.hero .copy-b.in { opacity: 1; transform: none; visibility: visible; transition: transform .45s var(--ease), opacity .45s var(--ease), visibility 0s; }
+.hero .meter { position: absolute; right: var(--gut); bottom: clamp(36px, 9vh, 96px); width: 2px; height: 120px; background: rgba(236, 232, 225, .18); }
+.hero .meter i { position: absolute; inset: 0; background: var(--accent); transform-origin: top; transform: scaleY(0); }
+@media (max-width: 760px) { .hero .copy { bottom: 28px; } .hero .meter { display: none; } }
+
+/* FILM CHAPTERS: 140svh, words at the bottom over the new picture (the clip plays over ~1.25 screens).
+   A HOLD CHAPTER (.film-chap without data-tr) is words over the held still: one screen. */
+.film-chap { position: relative; min-height: 140vh; min-height: 140svh; display: flex; align-items: flex-end; padding: 0 0 clamp(56px, 13vh, 132px); color: var(--bone); }
+.film-chap:not([data-tr]) { min-height: 100vh; min-height: 100svh; }
+.film-chap .fc { max-width: 780px; text-shadow: 0 1px 26px rgba(0, 0, 0, .5); }
+.film-chap .lede, .end .lede { color: rgba(236, 232, 225, .86); }
+@media (max-width: 760px) {   /* a soft pool behind words on busy frames; fades to nothing inside its own box (no hard line) */
+  .film-chap .fc, .end .wrap { position: relative; isolation: isolate; }
+  .film-chap .fc::before, .end .wrap::before { content: ""; position: absolute; inset: -90px -40px -70px; z-index: -1; pointer-events: none;
+    background: radial-gradient(closest-side at 45% 56%, rgba(8, 9, 11, .68), rgba(8, 9, 11, .34) 58%, rgba(8, 9, 11, 0) 100%); }
+}
+
+/* HOLDS: the content after a film chapter, over the held still. At least 70svh, or the next clip starts playing before
+   this one settles and a nav link lands mid-transition (checks.mjs anchors and holds catch it). */
+.hold { min-height: 70vh; min-height: 70svh; padding: 0 0 clamp(48px, 10vh, 120px); }
+
+/* PLATES: dense content over the held frame; light paper in light mode, the film stays dark */
+.plate { position: relative; background: var(--plate); border: 1px solid var(--plate-line); border-radius: 10px; padding: clamp(26px, 4vw, 60px); color: var(--fg); }
+@media (hover: hover) and (min-width: 761px) { .plate { background: var(--plate-glass); -webkit-backdrop-filter: blur(18px); backdrop-filter: blur(18px); } }
+@media (max-width: 760px) { .plate-bleed { margin: 0 calc(-1 * var(--gut)); border-radius: 0; border-left: 0; border-right: 0; padding: 30px var(--gut); } }
+
+/* CARD STRIP (optional): whole cards (4:5), one per swipe on phones with a counter, a grid on desks (nothing past an edge) */
+.strip-head { display: flex; align-items: end; justify-content: space-between; gap: 18px 24px; flex-wrap: wrap; }
+.strip { display: flex; gap: 16px; overflow-x: auto; scroll-snap-type: x mandatory; padding: clamp(26px, 4vw, 44px) 0 8px; scrollbar-width: none; overscroll-behavior-x: contain; }
+.strip::-webkit-scrollbar { display: none; }
+.strip figure { flex: 0 0 clamp(240px, 23vw, 320px); margin: 0; scroll-snap-align: start; }
+.strip figure img { width: 100%; height: auto; aspect-ratio: 4 / 5; object-fit: cover; border-radius: 6px; background: var(--bg-2); }
+.strip figcaption { margin-top: 12px; display: flex; justify-content: space-between; align-items: baseline; gap: 10px; font-weight: 700; }
+.strip figcaption small { font-weight: 600; color: var(--muted); text-align: right; flex: none; }
+.strip-ctl { display: flex; align-items: center; gap: 10px; }
+.strip-ctl .count { font-weight: 700; color: var(--muted); margin-right: 6px; font-variant-numeric: tabular-nums; }
+.strip-ctl .count b { color: var(--fg); }
+.strip-ctl button { width: 48px; height: 48px; border-radius: 50%; border: 1px solid var(--line-2); background: transparent; color: var(--fg); cursor: pointer; display: grid; place-items: center; }
+.strip-ctl button[aria-disabled="true"] { opacity: .35; cursor: default; }
+.strip-ctl svg { width: 18px; height: 18px; }
+@media (max-width: 760px) {
+  .strip { margin: 0 calc(-1 * var(--gut)); padding-left: var(--gut); padding-right: var(--gut); scroll-padding-inline: var(--gut); }
+  .strip figure { flex-basis: min(84vw, 360px); }
+}
+@media (min-width: 761px) {
+  .strip { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 26px 18px; overflow: visible; scroll-snap-type: none; }
+  .strip-ctl { display: none; }
+}
+
+.end { min-height: 100vh; min-height: 100svh; display: flex; align-items: flex-end; color: var(--bone); padding: 0 0 clamp(56px, 12vh, 120px); }
+.end h2 { font: 400 clamp(48px, 7vw, 116px)/.94 var(--serif); margin: 0; }
+.foot { background: var(--bg); border-top: 1px solid var(--line); padding: 40px 0; color: var(--muted); font-size: 14px; }
+.foot .wrap { display: flex; flex-wrap: wrap; gap: 18px 36px; justify-content: space-between; }
+.foot a { color: inherit; }
+
+/* SECONDARY PAGES (page.html, 404.html): no film, a graded still from the film as the hero. Desk: still behind, veil on
+   the left; phone: the still stacks on top (74vw) and the words sit below it on solid colour. Always dark. */
+.page-hero { position: relative; min-height: 100vh; min-height: 100svh; display: flex; align-items: flex-end; color: var(--bone); background: var(--film); overflow: hidden; padding: 120px 0 clamp(48px, 9vh, 96px); }
+.page-hero .bg { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: 50% 50%; }
+.page-hero .veil { position: absolute; inset: 0; background: linear-gradient(90deg, rgba(8, 9, 11, .9) 0%, rgba(8, 9, 11, .62) 42%, rgba(8, 9, 11, .1) 75%), linear-gradient(0deg, rgba(8, 9, 11, .85) 0%, rgba(8, 9, 11, 0) 40%); }
+.page-hero .wrap { position: relative; }
+.page-hero h1 { font: 400 clamp(46px, 7vw, 108px)/.94 var(--serif); margin: 0; }
+.page-hero .lede { color: rgba(236, 232, 225, .86); }
+.page-hero.short { min-height: 70vh; min-height: 70svh; }
+@media (max-width: 760px) {
+  .page-hero { padding-top: 62vw; }
+  .page-hero .bg { height: 74vw; }
+  .page-hero .veil { background: linear-gradient(0deg, var(--film) 40%, rgba(8, 9, 11, .7) 60%, rgba(8, 9, 11, 0) 82%); }
+}
+
+.reveal { transform: translateY(26px); transition: transform .45s var(--ease); } .reveal.in { transform: none; }
+
+/* SIDEWAYS PHONES: the hero words must stay on screen (checks.mjs short: 568x290, 740x304, 852x393) */
+@media (max-height: 560px) and (prefers-reduced-motion: no-preference) {
+  .top .wrap { height: 56px; }
+  .hero .stage { min-height: 0; }
+  .hero h1, .hero h2 { font-size: clamp(30px, 9vh, 44px); }
+  .hero .copy { bottom: 18px; }
+  .hero p { margin-top: 10px; font-size: 15px; }
+  .hero .ctas { margin-top: 14px; }
+  .hero .eyebrow { margin-bottom: 8px; }
+  .film-chap { padding-bottom: 32px; }
+}
+@media (max-height: 340px) and (prefers-reduced-motion: no-preference) {
+  .hero .eyebrow { display: none; }
+  .hero h1, .hero h2 { font-size: 28px; }
+  .hero .copy-a p { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+  .hero .ctas .btn { min-height: 42px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .reveal { transform: none !important; transition: none !important; }
+  .hero { height: auto; }
+  .hero .stage { position: relative; height: auto; min-height: 100svh; display: flex; flex-direction: column; justify-content: flex-end; gap: 36px; padding: 110px 0 48px; }
+  .hero .copy { position: relative; bottom: auto; transition: none; }
+  .hero .copy-b { opacity: 1; transform: none; visibility: visible; }
+  .hero .meter { display: none; } .film canvas { transition: none; }
+}
+
+/* Powered by Damora Digital: ALWAYS the Damora logo, never text only (Nishan, 2026-10-29; scrollfilm.py check "damora logo").
+   One-colour wordmark that follows the theme. 404 pages link /film.css, so the url resolves from the root. */
+.powered { display: inline-flex; align-items: center; gap: 10px; text-decoration: none; color: var(--muted); }
+.powered i { display: block; width: 140px; height: 13px; background: currentColor; -webkit-mask: url(brand/damora-wordmark.svg) left center / contain no-repeat; mask: url(brand/damora-wordmark.svg) left center / contain no-repeat; }
+.powered:hover { color: var(--fg); }

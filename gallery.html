@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+<meta name="color-scheme" content="light dark">
+<title>The Work | Cataleya Beauty Aesthetics (preview)</title>
+<link rel="icon" href="favicon-32.png">
+<link rel="stylesheet" href="gallery.css?v=3">
+</head>
+<body>
+<a class="skip" href="#collection">Skip to the collection</a>
+
+<header class="top" id="top">
+  <a class="brand" href="./" aria-label="Cataleya Beauty Aesthetics"><img src="brand/cataleya-header-on-light.svg" alt="Cataleya Beauty Aesthetics" class="logo-l"><img src="brand/cataleya-header-on-dark.svg" alt="" class="logo-d" aria-hidden="true"></a>
+  <nav><a href="./">Home</a><a href="#collection">The work</a><a class="btn" href="#book"><span class="long">Book a consultation</span><span class="short">Book</span></a></nav>
+</header>
+
+<main>
+  <!-- 1. Opening: the band from her mark draws itself -->
+  <section class="open" aria-label="The work">
+    <p class="kicker">The gallery</p>
+    <h1><span class="w">The</span> <span class="w">work,</span> <em class="w">up close.</em></h1>
+    <div class="band" aria-hidden="true"><i class="l"></i><b class="d"></b><i class="r"></i></div>
+    <p class="lede">Treatments by a registered nurse injector, in Vaughan and Brantford. Walk through the work, then book a consultation.</p>
+    <p class="hint" aria-hidden="true">Scroll to walk through</p>
+  </section>
+
+  <!-- 2. The hall: pieces float at depth, the scroll walks the camera through -->
+  <section class="hall" id="hall" aria-label="Walk through the gallery">
+    <div class="stage">
+      <div class="floor" aria-hidden="true"></div>
+      <div class="scene" id="scene"></div>
+      <div class="hall-count" aria-hidden="true"><span id="hallNo">01</span><i></i><span id="hallOf">12</span></div>
+    </div>
+  </section>
+
+  <!-- 3. The collection: filter, build in, hover, open -->
+  <section class="collection" id="collection" aria-label="The collection">
+    <div class="head">
+      <p class="kicker">The collection</p>
+      <h2>Browse by treatment</h2>
+      <div class="filters" role="tablist" id="filters"></div>
+    </div>
+    <div class="grid" id="grid"></div>
+  </section>
+
+  <section class="book" id="book" aria-label="Book a consultation">
+    <div class="band" aria-hidden="true"><i class="l"></i><b class="d"></b><i class="r"></i></div>
+    <h2>Every plan starts with a conversation.</h2>
+    <p>A one-on-one consultation with a registered nurse, in Vaughan or Brantford. Tuesdays and Saturdays, other days by appointment.</p>
+    <a class="btn big" href="./#book">Book a consultation</a>
+  </section>
+</main>
+
+<footer class="foot">
+  <p><b>Preview built by Damora Digital.</b> Photos from Cataleya Beauty Aesthetics' public Instagram, used for this preview only. Use on the live site is confirmed with her, with each client's consent. Results vary from person to person.</p>
+  <a href="https://damoradigital.com" class="dd"><img src="brand/damora-logo-horizontal-on-light-1200.png" alt="Damora Digital" class="logo-l"><img src="brand/damora-logo-horizontal-on-dark-1200.png" alt="" aria-hidden="true" class="logo-d"></a>
+</footer>
+
+<div class="lb" id="lb" role="dialog" aria-modal="true" aria-label="Photo viewer" hidden>
+  <button class="lb-x" aria-label="Close">&times;</button>
+  <button class="lb-p" aria-label="Previous">&#8592;</button>
+  <figure><img id="lbImg" alt=""><figcaption id="lbCap"></figcaption></figure>
+  <button class="lb-n" aria-label="Next">&#8594;</button>
+</div>
+
+<script src="pieces.js?v=3"></script>
+<script src="gallery.js?v=3"></script>
+</body>
+</html>
